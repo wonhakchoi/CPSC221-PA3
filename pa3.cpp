@@ -6,18 +6,12 @@
 //              Produces PNG images of the point sets
 
 #include "sqtree.h"
-#include "stats.h"
-#include <iostream>
-#include <utility>
-#include <assert.h>
 
 int main() {
 
   // read in image
   PNG orig;
   orig.readFromFile("images/orig/small1.png");
-
-  
   /*
   orig.readFromFile("images/orig/small2.png");
   orig.readFromFile("images/orig/pacman.png");
