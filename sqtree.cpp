@@ -180,14 +180,53 @@ PNG SQtree::render() {
  * Delete allocated memory.
  */
 void SQtree::clear() {
-  // Your code here.
+  clearHelper(root);
 }
+
+void SQtree::clearHelper(Node * &root) {
+  if (root != NULL) {
+    clearHelper(root->NW);
+    clearHelper(root->NE);
+    clearHelper(root->SW);
+    clearHelper(root->SE);
+    delete root;
+    root = NULL;
+  }
+}
+
 
 void SQtree::copy(const SQtree & other) {
-  // Your code here.
+  root = copyHelper(other.root);
+  root->height = other.root->height;
+  root->width = other.root->width;
 }
 
+SQtree::Node* SQtree::copyHelper(Node *root) {
+  if (root != NULL) {
+    Node *newNode = new Node(root->upLeft, root->width, root->height, root->avg, root->var);
+    newNode->NW = copyHelper(root->NW);
+    newNode->NE = copyHelper(root->NE);
+    newNode->SW = copyHelper(root->SW);
+    newNode->SE = copyHelper(root->SE);
+  }
+  return root;
+}
+
+
+
 int SQtree::size() {
-  // Your code here.
+  return sizeHelper(root);
+}
+
+
+int SQtree::sizeHelper(Node *root) {
+  if (root != NULL) {
+    int nodeCount = 1;
+    nodeCount += sizeHelper(root->NW) + sizeHelper(root->NE) + sizeHelper(root->SW) + sizeHelper(root->SE);
+    return nodeCount;
+  } else {
+    return 0;
+  }
+
 }
 

@@ -27,7 +27,7 @@ using namespace cs221util;
  */
 
 class SQtree {
- private:
+ public:
 
   /**
    * The Node class is private to the tree class via the principle of
@@ -184,8 +184,11 @@ class SQtree {
 
 
   /* BEGIN ============== Your personal private functions ============= */
+  void clearHelper(Node * &root);
 
+  Node* copyHelper(Node * root);
 
+  int sizeHelper(Node *root);
 
   /* END ================ Your personal private functions ============= */
 
