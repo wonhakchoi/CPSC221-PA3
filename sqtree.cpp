@@ -168,12 +168,20 @@ SQtree::Node * SQtree::buildTree(stats & s, pair<int,int> & ul,
 
 
 
-/**
- * Render SQtree and return the resulting image.
- */
 PNG SQtree::render() {
+  PNG pic(root->width, root->height);
+  renderHelper(pic, root);
+  return pic;
+}
 
-  // Your code here.
+void SQtree::renderHelper(PNG &png, Node *root) {
+  if (root->NW == NULL) {
+    int x = root->upLeft.first;
+    int y = root->upLeft.second;
+
+
+  }
+
 }
 
 /**

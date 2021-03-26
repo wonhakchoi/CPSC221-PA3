@@ -184,6 +184,8 @@ class SQtree {
 
 
   /* BEGIN ============== Your personal private functions ============= */
+  void renderHelper(PNG &png, Node *root);
+  
   void clearHelper(Node * &root);
 
   Node* copyHelper(Node * root);
