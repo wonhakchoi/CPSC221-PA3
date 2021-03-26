@@ -175,13 +175,28 @@ PNG SQtree::render() {
 }
 
 void SQtree::renderHelper(PNG &png, Node *root) {
-  if (root->NW == NULL) {
+
+
+  // base case:
+  if (root->NW == NULL && root->NE == NULL && root->SW == NULL && root->SE == NULL) {
     int x = root->upLeft.first;
     int y = root->upLeft.second;
 
+    for (int i = x; i < root->width; i++) {
+      for (int j = y; j < root->height; j++) {
+          *(png.getPixel(i, j)) = root->avg;
+      }
+    }
 
+  } else if (root->NE == NULL && root->SE == NULL) {
+    renderHelper(png, root->NW);
+    renderHelper(png, root->SW); 
+  } else {
+    renderHelper(png, root->NW); 
+    renderHelper(png, root->NE);
+    renderHelper(png, root->SW);
+    renderHelper(png, root->SE);
   }
-
 }
 
 /**
