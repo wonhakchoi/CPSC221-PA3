@@ -223,7 +223,6 @@ void SQtree::copy(const SQtree & other) {
   root = copyHelper(other.root);
   root->height = other.root->height;
   root->width = other.root->width;
-
 }
 
 SQtree::Node* SQtree::copyHelper(Node *root) {
