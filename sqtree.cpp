@@ -76,20 +76,20 @@ SQtree::Node * SQtree::buildTree(stats & s, pair<int,int> & ul,
 
   //check every combination for splitting; compare and find the min of the
   //max of variances, bounds don't include other set of edges
-  for(int x = ul.first; x < w; x++) {
-    for(int y = ul.second; y < h; y++) {
+  for(int x = 0; x < w; x++) {
+    for(int y = 0; y < h; y++) {
       //this is the original image; continue through loop
-      if(x == ul.first && y == ul.second) {
+      if(x == 0 && y == 0) {
         continue;
       }
       else {
         //split in 4s, find max var
         //if we are splitting at the edge, split into 2 kids
         max_of_kids = 0;
-        if(x == ul.first) {
+        if(x == 0) {
           //check variability of the 2 kids
-          if(s.getVar(ul, w, y) < s.getVar(make_pair(x, y), w, h - y)) {
-            max_of_kids = s.getVar(make_pair(x, y), w, h - y);
+          if(s.getVar(ul, w, y) < s.getVar(make_pair(ul.first, ul.second + y), w, h - y)) {
+            max_of_kids = s.getVar(make_pair(ul.first, ul.second + y), w, h - y);
           }
           else {
             max_of_kids = s.getVar(ul, w, y);
@@ -98,13 +98,13 @@ SQtree::Node * SQtree::buildTree(stats & s, pair<int,int> & ul,
           //do a check to see if it's the minimum of maximums
           if(max_of_kids < min_of_max_var) {
             min_of_max_var = max_of_kids;
-            split.first = x;
-            split.second = y;
+            split.first = ul.first;
+            split.second = ul.second + y;
           }
         }
-        else if(y == ul.second) {
-          if(s.getVar(ul, x, h) < s.getVar(make_pair(x, y), w - x, h)) {
-            max_of_kids = s.getVar(make_pair(x, y), w - x, h);
+        else if(y == 0) {
+          if(s.getVar(ul, x, h) < s.getVar(make_pair(ul.first + x, ul.second), w - x, h)) {
+            max_of_kids = s.getVar(make_pair(ul.first + x, ul.second), w - x, h);
           }
           else {
             max_of_kids = s.getVar(ul, x, h);
@@ -112,8 +112,8 @@ SQtree::Node * SQtree::buildTree(stats & s, pair<int,int> & ul,
 
           if(max_of_kids < min_of_max_var) {
             min_of_max_var = max_of_kids;
-            split.first = x;
-            split.second = y;
+            split.first = ul.first + x;
+            split.second = ul.second;
           }
         }
 
@@ -121,9 +121,9 @@ SQtree::Node * SQtree::buildTree(stats & s, pair<int,int> & ul,
         else {
           //calculate the var for all 4 kids, find maximum of them
           kid_vars[0] = s.getVar(ul, x, y);
-          kid_vars[1] = s.getVar(make_pair(ul.first, y), x, h - y);
-          kid_vars[2] = s.getVar(make_pair(x, ul.second), w - x, y);
-          kid_vars[3] = s.getVar(make_pair(x, y), w- x, h - y);
+          kid_vars[1] = s.getVar(make_pair(ul.first, ul.second + y), x, h - y);
+          kid_vars[2] = s.getVar(make_pair(ul.first + x, ul.second), w - x, y);
+          kid_vars[3] = s.getVar(make_pair(ul.first + x, ul.second + y), w - x, h - y);
 
           for(int i = 0; i < 4; i++) {
             if(max_of_kids < kid_vars[i]) {
@@ -133,8 +133,8 @@ SQtree::Node * SQtree::buildTree(stats & s, pair<int,int> & ul,
 
           if(max_of_kids < min_of_max_var) {
             min_of_max_var = max_of_kids;
-            split.first = x;
-            split.second = y;
+            split.first = ul.first + x;
+            split.second = ul.second + y;
           }
         }
       }
@@ -145,22 +145,22 @@ SQtree::Node * SQtree::buildTree(stats & s, pair<int,int> & ul,
   
   //2 kids
   if(split.first == ul.first) {
-    curr -> NW = buildTree(s, ul, w, split.second, tol);
-    curr -> SW = buildTree(s, split, w, h - split.second, tol);
+    curr -> NW = buildTree(s, ul, w, split.second - ul.second, tol);
+    curr -> SW = buildTree(s, split, w, h - (split.second - ul.second), tol);
   }
   else if(split.second == ul.second) {
-    curr -> NW = buildTree(s, ul, split.first, h, tol);
-    curr -> SW = buildTree(s, split, w - split.first, h, tol);
+    curr -> NW = buildTree(s, ul, split.first - ul.first, h, tol);
+    curr -> SW = buildTree(s, split, w - (split.first - ul.first), h, tol);
   }
 
   //4 kids
   else {
     pair<int, int> ne_ul = make_pair(split.first, ul.second);
     pair<int, int> sw_ul = make_pair(ul.first, split.second);
-    curr -> NW = buildTree(s, ul, split.first, split.second, tol);
-    curr -> NE = buildTree(s, ne_ul, w - split.first, split.second, tol);
-    curr -> SW = buildTree(s, sw_ul, split.first, h - split.second, tol);
-    curr -> SE = buildTree(s, split, w - split.first, h - split.second, tol);
+    curr -> NW = buildTree(s, ul, split.first - ul.first, split.second - ul.second, tol);
+    curr -> NE = buildTree(s, ne_ul, w - (split.first - ul.first), split.second - ul.second, tol);
+    curr -> SW = buildTree(s, sw_ul, split.first - ul.first, h - (split.second - ul.second), tol);
+    curr -> SE = buildTree(s, split, w - (split.first - ul.first), h - (split.second - ul.second), tol);
   }
 
   return curr;
