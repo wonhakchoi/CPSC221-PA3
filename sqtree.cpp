@@ -47,7 +47,6 @@ SQtree::SQtree(PNG & imIn, double tol) {
   stats s = stats(imIn);
   pair<int, int> ul = make_pair(0,0);
   root = buildTree(s, ul, imIn.width(), imIn.height(), tol);
-  cout << "done" << endl;
 }
 
 
@@ -224,6 +223,7 @@ void SQtree::copy(const SQtree & other) {
   root = copyHelper(other.root);
   root->height = other.root->height;
   root->width = other.root->width;
+
 }
 
 SQtree::Node* SQtree::copyHelper(Node *root) {
@@ -233,6 +233,7 @@ SQtree::Node* SQtree::copyHelper(Node *root) {
     newNode->NE = copyHelper(root->NE);
     newNode->SW = copyHelper(root->SW);
     newNode->SE = copyHelper(root->SE);
+    return newNode;
   }
   return root;
 }

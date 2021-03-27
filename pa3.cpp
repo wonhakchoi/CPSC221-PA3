@@ -31,7 +31,7 @@ int main() {
   PNG pic = t.render();
 
   // write it out
-  pic.writeToFile("images/out/small1.png");
+  pic.writeToFile("images/out/test.png");
 
   return 0;
 }
