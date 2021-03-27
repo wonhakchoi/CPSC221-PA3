@@ -47,6 +47,7 @@ SQtree::SQtree(PNG & imIn, double tol) {
   stats s = stats(imIn);
   pair<int, int> ul = make_pair(0,0);
   root = buildTree(s, ul, imIn.width(), imIn.height(), tol);
+  cout << "done" << endl;
 }
 
 
@@ -182,9 +183,10 @@ void SQtree::renderHelper(PNG &png, Node *root) {
     int x = root->upLeft.first;
     int y = root->upLeft.second;
 
-    for (int i = x; i < root->width; i++) {
-      for (int j = y; j < root->height; j++) {
-          *(png.getPixel(i, j)) = root->avg;
+    for (int i = x; i < root->width + x; i++) {
+      for (int j = y; j < root->height + y; j++) {
+          RGBAPixel *temp = png.getPixel(i, j);
+          *temp = root -> avg;
       }
     }
 
